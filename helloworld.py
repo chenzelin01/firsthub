@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 import webapp2
+import gensim
 from paste import httpserver
 
 html = """
@@ -60,9 +61,21 @@ class HelloWebapp2(webapp2.RequestHandler):
             if len(get) is 0:
                 self.response.write(html)
             else:
-                self.response.write('You sent ' + get['s'] + ' which was ' + str(len(get['s'])) + ' length.')
+                # self.response.write('You sent ' + get['s'] + ' which was ' + str(len(get['s'])) + ' length.')
+                words = compute_sim(get['s'])
+                if words is None:
+                    self.response.write("the word " + get['s'] + " does not conclude in the data set")
+                else:
+                    self.response.write("the similar word of " + get['s'] + " is \n" + words)
         except:
             self.response.write("")
+def compute_sim(word):
+    try:
+        m = gensim.models.Word2Vec.load('model')
+        words = m.most_similar_cosmul(word)
+    except KeyError:
+        words = None
+    return words
 
 app = webapp2.WSGIApplication([('/', HelloWebapp2)], debug=True)
 
