@@ -79,8 +79,8 @@ def compute_sim(word):
 
 app = webapp2.WSGIApplication([('/', HelloWebapp2)], debug=True)
 
-def main():
-    httpserver.serve(app, host='127.0.0.1', port='8080')
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     httpserver.serve(app, host='127.0.0.1', port='8080')
+#
+# if __name__ == '__main__':
+#     main()
