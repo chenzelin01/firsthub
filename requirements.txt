@@ -1,0 +1,4 @@
+WebOb==1.7.2
+webapp2==3.0.0b1
+Paste==2.0.3
+gensim==2.0.0
