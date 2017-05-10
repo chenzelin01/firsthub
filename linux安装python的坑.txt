@@ -1,0 +1,4 @@
+1、编译安装时候需要加  
+ ./configure --enable-shared --prefix=/usr/local/python27
+    make && make install
+2、环境中添加变量 LD_LIBRARY_PATH bz，python36等so库的lib地址

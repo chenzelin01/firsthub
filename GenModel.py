@@ -26,6 +26,6 @@ if __name__ == '__main__':
         # model = gensim.models.Word2Vec(result_txt)
         # model.save('model')
         model = gensim.models.Word2Vec.load('model')
-        sim = model.similarity("周杰伦", "林")
+        sim = model.similarity("水", "林")
         print(sim)
         print("time using: ", time() - t1)
