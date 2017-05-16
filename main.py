@@ -1,6 +1,5 @@
 # -*- coding:utf-8 -*-
 import webapp2
-from paste import httpserver
 import urllib2
 import urllib
 import time
@@ -70,8 +69,7 @@ class GXQDaily(webapp2.RedirectHandler):
     def get(self):
         file = self.gxq_gold() + self.gxq_ice()
         # file = self.yooli()
-        if Debug:
-            self.response.write(file)
+        self.response.write(file)
 
     def gxq_gold(self):
         # gold cron
@@ -86,9 +84,8 @@ class GXQDaily(webapp2.RedirectHandler):
         para = urllib.urlencode(para)
         req = urllib2.Request(domain + url, para)
         reponse = urllib2.urlopen(req)
-        if Debug:
-            file = reponse.read()
-            return file
+        file = reponse.read()
+        return file
 
     def gxq_ice(self):
         # ice cron
@@ -103,9 +100,8 @@ class GXQDaily(webapp2.RedirectHandler):
         para = urllib.urlencode(para)
         req = urllib2.Request(domain + url, para)
         reponse = urllib2.urlopen(req)
-        if Debug:
-            file = reponse.read()
-            return file
+        file = reponse.read()
+        return file
     def yooli(self):
         # yooli.com cron
         domain = "http://app.yooli.com/"
@@ -131,12 +127,12 @@ class GXQDaily(webapp2.RedirectHandler):
         para = urllib.urlencode(para)
         req = urllib2.Request(domain + url, para)
         reponse = urllib2.urlopen(req)
-        if Debug:
-            file = reponse.read()
-            return file
+        file = reponse.read()
+        return file
 app = webapp2.WSGIApplication([('/', HelloWebapp2), ('/daily', GXQDaily)], debug=True)
 
 if Debug:
+    from paste import httpserver
     def main():
         httpserver.serve(app, host='127.0.0.1', port='8080')
 
