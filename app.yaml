@@ -4,4 +4,4 @@ threadsafe: true
 
 handlers:
 - url:/.*
-  script: gxq_daily.app
+  script: gxqDaily.app
