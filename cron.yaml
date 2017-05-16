@@ -2,5 +2,5 @@ cron:
 -description: "daily job to subscribe cron gxq"
  url: /daily
  schedule: every 1 mins
- target: chenzelinnet.appspot.com/daily
+ target: beta
  timezone: Asia/Shanghai
