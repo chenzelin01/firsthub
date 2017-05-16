@@ -54,7 +54,7 @@ function touchMove(e){
 </body>
 </html>
 """
-Debug = True
+Debug = False
 class HelloWebapp2(webapp2.RequestHandler):
     def get(self):
         get = self.request.GET
