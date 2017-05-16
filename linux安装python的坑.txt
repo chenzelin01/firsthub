@@ -1,4 +1,18 @@
 1、编译安装时候需要加  
  ./configure --enable-shared --prefix=/usr/local/python27
+ ./configure --enable-shared --prefix=/usr/local/python36
     make && make install
-2、环境中添加变量 LD_LIBRARY_PATH bz，python36等so库的lib地址
+2、环境中添加变量 LD_LIBRARY_PATH = bz，python36等so库的lib地址 
+  也可以参考blog中的做法（没亲自尝试过）
+  http://blog.csdn.net/beautygao/article/details/25862019
+ （可以添加到.bashrc中, bz的so库地址应该在/lib64下有多个版本的libbz2.so， 把这个copy到自己的lib目录下，
+  注意可能需rename一下）
+
+ LD_LIBRARY_PATH = ~/pythonXX/lib/pythonXX/:~/pythonXX/lib
+
+3、若bz2还是加载失败则需要自己选择python版本对应的bz2.so库文件到自己的python目录 
+ cp /usr/lib64/python2.6/lib-dynload/bz2.so  /python27/lib/python2.7/lib-dynload
+ cp _bz2.cpython-36m-x86_64-linux-gnu.so  /python27/lib/python3.6/lib-dynload
+
+python27 把文件当成module需要添加空的__init__.py文件想要建立自己的python空间直接用virtualenv就可以了，
+可以不必折腾自己的python路径，如果版本问题的话，还是需要自己的python路径的

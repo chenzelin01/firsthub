@@ -3,5 +3,5 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /.*
-  script: helloworld.app
+- url:/.*
+  script: gxq_daily.app
