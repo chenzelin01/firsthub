@@ -3,6 +3,8 @@ import webapp2
 import urllib2
 import urllib
 import time
+import json
+import cookielib
 html = """
 <!DOCTYPE>
 <html>
@@ -66,18 +68,24 @@ class HelloWebapp2(webapp2.RequestHandler):
             self.response.write("")
 
 class GXQDaily(webapp2.RedirectHandler):
+    def __init__(self):
+        self.sid = None
+
     def get(self):
+        self.sid = self.get_gxq_sid()
         file = self.gxq_gold() + self.gxq_ice()
         # file = self.yooli()
         self.response.write(file)
 
     def gxq_gold(self):
+        if self.sid is None:
+            self.sid = self.get_gxq_sid()
         # gold cron
         domain = "http://fjwebs.gxq168.com"
         url = "/act/sign/signup"
         para = {
             'uid': '2222799943',
-            'sid': 'cb8c17b1f4a24b2a13bc7f74b67522ea',
+            'sid': self.sid,
             'version': '1.1.0',
             'type': '1'
         }
@@ -88,17 +96,19 @@ class GXQDaily(webapp2.RedirectHandler):
         return file
 
     def gxq_ice(self):
+        if self.sid is None:
+            self.sid = self.get_gxq_sid()
         # ice cron
         domain = "http://appweb.gxq168.com"
         url = "/act/sign/signup"
         para = {
             'uid': '2222799943',
-            'sid': 'd0298051f48f40f65bdc481fa88f7b3e',
+            'sid': self.sid,
             'version': '5.0.0',
             'type': '1'
         }
         para = urllib.urlencode(para)
-        req = urllib2.Request(domain + url, para)
+        req = urllib2.Request(url=domain + url, data=para)
         reponse = urllib2.urlopen(req)
         file = reponse.read()
         return file
@@ -125,10 +135,60 @@ class GXQDaily(webapp2.RedirectHandler):
             'si': '40023142896f816b3714cc3441b621e7e530a45b'
         }
         para = urllib.urlencode(para)
-        req = urllib2.Request(domain + url, para)
+        req = urllib2.Request(url=domain + url, data=para)
         reponse = urllib2.urlopen(req)
         file = reponse.read()
         return file
+
+    def get_gxq_sid(self):
+        domain = "https://passport.jinfuzi.com"
+        url = "/service/login"
+        para = {
+            "account": "18819461475",
+            "c_business": '2',
+            "c_channel": 'fj0update',
+            "c_identity": '53148d584290a7d5364e189882c648d2',
+            "c_mmodel": 'HUAWEI GRA-TL00',
+            "c_network": 'wifi',
+            "c_platform": '2',
+            "c_sysVer": '5.0.1',
+            "c_version": '1.1.0',
+            "password": '1995023czl!!',
+            "sign": '49e04a8f86e1e97791dd26620de3ef89',
+            "type": '1'
+        }
+        para = urllib.urlencode(para)
+        req = urllib2.Request(url=domain + url, data=para)
+        reponse = urllib2.urlopen(req)
+        file = json.load(reponse)
+        return file['res']['data']['sid']
+
+    def ssccat_login(self):
+        cj = cookielib.CookieJar()
+        opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+        opener.addheaders = [
+            ('User-agent', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'),
+            ('Origin', 'https://www.ssccat.tk')
+        ]
+        urllib2.install_opener(opener)
+        domain = "https://www.ssccat.tk"
+        url = "/auth/login"
+        para = {
+            'email': '734880901@qq.com',
+            'passwd': '1%distance'
+        }
+        para = urllib.urlencode(para)
+        req = urllib2.Request(url=domain + url, data=para)
+        urllib2.urlopen(req)
+        sign_url = '/user/checkin'
+        req = urllib2.Request(url=domain + sign_url)
+        req.add_header('Referer', 'https://www.ssccat.tk/user')
+        req.add_header('X-Requested-With:', 'XMLHttpRequest')
+        req.add_header('Accept', 'application/json, text/javascript, */*; q=0.01')
+        response = urllib2.urlopen(domain + sign_url)
+        print response.read()
+
+
 app = webapp2.WSGIApplication([('/', HelloWebapp2), ('/daily', GXQDaily)], debug=True)
 
 if Debug:
@@ -137,4 +197,4 @@ if Debug:
         httpserver.serve(app, host='127.0.0.1', port='8080')
 
     if __name__ == '__main__':
-        main()
+        GXQDaily().ssccat_login()
