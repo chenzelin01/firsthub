@@ -55,7 +55,7 @@ function touchMove(e){
 </body>
 </html>
 """
-Debug = False
+Debug = True
 class HelloWebapp2(webapp2.RequestHandler):
     def get(self):
         get = self.request.GET
@@ -68,8 +68,6 @@ class HelloWebapp2(webapp2.RequestHandler):
             self.response.write("")
 
 class GXQDaily(webapp2.RedirectHandler):
-    def __init__(self):
-        self.sid = None
 
     def get(self):
         self.sid = self.get_gxq_sid()
@@ -197,4 +195,4 @@ if Debug:
         httpserver.serve(app, host='127.0.0.1', port='8080')
 
     if __name__ == '__main__':
-        GXQDaily().ssccat_login()
+        main()
