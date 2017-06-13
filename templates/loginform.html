@@ -4,16 +4,25 @@
     <meta charset="UTF-8">
     <title>Please Sign In</title>
 </head>
+<script type="text/javascript">
+    function register(){
+        window.location.href="/register";
+    }
+    function login(){
+        document.getElementById("form1").submit();
+    }
+</script>
 <body>
 {% if message %}
 <p style="color:red">{{message}}</p>
 {% endif %}
-<form action="/signin" method="post">
+<form id="form1" action="/signin" method="post">
     <legend>Please sign in:</legend>
     <p><input name="username" placeholder="Username" value="{{ username }}"> </p>
     <p><input name="password" placeholder="Password" type="password"></p>
-    <p><button type="submit">Sign In</button> <button href="/register">Register</button></p>
-
 </form>
+    <button onclick="login()">Sign In</button> <button onclick="register()">Register</button>
+
+
 </body>
 </html>
