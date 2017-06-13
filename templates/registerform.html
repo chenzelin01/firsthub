@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+</head>
+<script type="text/javascript">
+     function checkpwd(){
+     with(document.all){
+  var p1=document.getElementById("pwd1").value;//获取密码框的值
+  var p2=document.getElementById("pwd").value;//获取重新输入的密码值
+  if(p1==""){
+   alert("请输入密码！");//检测到密码为空，提醒输入//
+   document.getElementById("pwd").focus();//焦点放到密码框
+   return false;//退出检测函数
+  }//如果允许空密码，可取消这个条件
+
+  if(p1!=p2){//判断两次输入的值是否一致，不一致则显示错误信息
+   alert("the password doesn't match");
+   document.getElementById("pwd1").value = "";
+   document.getElementById("pwd").value = "";
+   document.getElementById("pwd").focus();
+   return false;
+  }else{
+   document.getElementById("form1").submit()
+  }
+ }
+ }
+</script>
+<body>
+    <legend>Welcome, Please Register</legend>
+    <h3>it is recommended to use the password same as the username</h3>
+    <form id="form1" action="/register" method="post">
+        <input name="username" placeholder="Username" value="{{ username }}"> </br>
+        <input id="pwd1" name="password1" placeholder="Password" type="password"></br>
+        <input id="pwd" name="password" placeholder="Confirm Password" type="password"></br>
+        <button type="button" onclick="checkpwd()">Register</button> </br>
+        <div id="msg" style="color:red;"></div>
+    </form>
+</body>
+</html>
