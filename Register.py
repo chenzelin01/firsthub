@@ -1,11 +1,12 @@
 # -*- coding:utf-8 -*-
 from flask import Flask, request, render_template
-from google.appengine.ext import ndb
+from google.appengine.ext import db, ndb
+import logging
 
-class user(ndb.Model):
+class user(db.Model):
     """Sub model for representing an author."""
-    username = ndb.StringProperty(indexed=False)
-    password = ndb.StringProperty(indexed=False)
+    username = db.StringProperty(indexed=False)
+    password = db.StringProperty(indexed=False)
 
 
 app = Flask(__name__)
@@ -15,11 +16,21 @@ def register_form():
 
 @app.route('/register', methods=['POST'])
 def register():
-    u = user()
-    u.username = request.form['username']
-    u.password = request.form['password']
-    u.put()
-    return render_template('loginform.html', username='jolin')
+    uname = request.form['username']
+    try:
+        logging.info(uname)
+        q = user.all()
+        logging.info(q)
+        for u in q.run(limit=2):
+            logging(u.username + ' ' + u.password)
+        return render_template('loginform.html?msg=wrongname', username=uname)
+    except:
+        logging.info("error occur")
+        u = user()
+        u.username = uname
+        u.password = request.form['password']
+        u.put()
+        return render_template('loginform.html', username=uname)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
