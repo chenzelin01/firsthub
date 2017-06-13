@@ -39,8 +39,8 @@
         return null;
     }
   function loadMsg(){
-    var msg = getUrlParam('msg');
-    if(msg != null){
+    var msg_ = document.getElementById('msg').value;
+    if(msg_ == "wrong"){
         alert("the username had been registered, please try another");
     }
   }
@@ -54,5 +54,6 @@
         <input id="pwd" name="password" placeholder="Confirm Password" type="password"></br>
         <button type="button" onclick="checkpwd()">Register</button> </br>
     </form>
+    <input id="msg", hidden="true" value="{{ msg }}"></input>
 </body>
 </html>
