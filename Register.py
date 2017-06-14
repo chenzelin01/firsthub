@@ -12,6 +12,11 @@ class user(ndb.Model):
     date = ndb.DateProperty(auto_now_add=True)
 
 app = Flask(__name__)
+@app.route('/0EDF3EDF5FBD4245C736DDF0FE76570E.txt', methods=['GET'])
+def ssl():
+    txt = 'D4C362234370B6C59CD1524336BCF1EC23D406B7\ncomodoca.com'
+    return txt
+
 @app.route('/register', methods=['GET'])
 def register_form():
     return render_template('registerform.html')
