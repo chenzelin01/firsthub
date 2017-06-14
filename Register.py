@@ -27,22 +27,30 @@ def register_form():
 def register():
     uname = request.form['username']
     logging.info(uname)
-    logging.info('ancestor_key = ndb.Key("USER", uname or "*notitle*")')
-    ancestor_key = ndb.Key("USER", uname or "*notitle*")
-    logging.info('users = user.query_user(ancestor_key).fetch(20)')
-    users = user.query_user(ancestor_key).fetch(1)
-    logging.info('for u in users:')
-    for u in users:
-        logging.info(u.username)
-        return render_template('registerform.html', username=uname, msg="wrong")
+    try:
+        logging.info('ancestor_key = ndb.Key("USER", uname or "*notitle*")')
+        ancestor_key = ndb.Key("USER", uname or "*notitle*")
+        logging.info('users = user.query_user(ancestor_key).fetch(20)')
+        users = user.query_user(ancestor_key).fetch(1)
+        logging.info('for u in users:')
+        for u in users:
+            logging.info(u.username)
+            return render_template('registerform.html', username=uname, msg="wrong")
 
-    logging.info('register new user')
-    u = user(parent=ndb.Key("USER", uname or "*notitle*"))
-    logging.info('u = user(parent=ndb.Key("USER", uname or "*notitle*"))')
-    u.username = uname
-    u.password = request.form['password']
-    u.put()
-    return render_template('loginform.html', username=uname)
+        logging.info('register new user')
+        u = user(parent=ndb.Key("USER", uname or "*notitle*"))
+        logging.info('u = user(parent=ndb.Key("USER", uname or "*notitle*"))')
+        u.username = uname
+        u.password = request.form['password']
+        u.put()
+        return render_template('loginform.html', username=uname)
+    except:
+        u = user(parent=ndb.Key("USER", uname or "*notitle*"))
+        logging.info('u = user(parent=ndb.Key("USER", uname or "*notitle*"))')
+        u.username = uname
+        u.password = request.form['password']
+        u.put()
+        return render_template('loginform.html', username=uname)
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -56,6 +64,8 @@ def signin_form():
 def signin():
     username = request.form['username']
     password = request.form['password']
+    # ancestor_key =
+    # u = user.query_user()
     if username == 'admin' and password == 'password':
         return render_template('signin-ok.html', username=username)
     return render_template('loginform.html', message='bad username or password', username=username)
