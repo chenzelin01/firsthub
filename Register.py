@@ -64,11 +64,12 @@ def signin_form():
 def signin():
     username = request.form['username']
     password = request.form['password']
-    # ancestor_key =
-    # u = user.query_user()
-    if username == 'admin' and password == 'password':
-        return render_template('signin-ok.html', username=username)
-    return render_template('loginform.html', message='bad username or password', username=username)
+    ancestor_key = ndb.Key('USER', username or "*notitle*")
+    users = user.query_user(ancestor_key)
+    for u in users:
+        if password == u.password:
+            return render_template('signin-ok.html', username=username)
+    return render_template('loginform.html', message='wrong username or wrong password', username=username)
 
 if __name__ == '__main__':
     app.run()
