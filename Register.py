@@ -4,12 +4,14 @@ from google.appengine.ext import ndb
 import logging
 import cgi
 
-user_key = ndb.Key('user', 'default_user')
 class user(ndb.Model):
     """Sub model for representing an author."""
     username = ndb.StringProperty()
     password = ndb.StringProperty()
     date = ndb.DateProperty(auto_now_add=True)
+    @classmethod
+    def query_user(cls, ancestor_key):
+        return cls.query(ancestor=ancestor_key).order(-cls.date)
 
 app = Flask(__name__)
 @app.route('/0EDF3EDF5FBD4245C736DDF0FE76570E.txt', methods=['GET'])
@@ -25,16 +27,18 @@ def register_form():
 def register():
     uname = request.form['username']
     logging.info(uname)
-    # q = ndb.gql("SELECT * FROM user WHERE ANCESTOR IS :1 ORDER BY date DESC LIMIT 10", user_key)
-    q = ndb.gql("SELECT * FROM user WHERE ANCESTOR IS :1", user_key)
-    # q = user.query(user.username == 'zelin')
-    # logging.info(q)
-    # raise TypeError
-    for u in q:
-        logging(u.username)
-        if u.username == uname:
-            return render_template('registerform.html', username=uname, msg="wrong")
-    u = user(parent=user_key)
+    logging.info('ancestor_key = ndb.Key("USER", uname or "*notitle*")')
+    ancestor_key = ndb.Key("USER", uname or "*notitle*")
+    logging.info('users = user.query_user(ancestor_key).fetch(20)')
+    users = user.query_user(ancestor_key).fetch(1)
+    logging.info('for u in users:')
+    for u in users:
+        logging.info(u.username)
+        return render_template('registerform.html', username=uname, msg="wrong")
+
+    logging.info('register new user')
+    u = user(parent=ndb.Key("USER", uname or "*notitle*"))
+    logging.info('u = user(parent=ndb.Key("USER", uname or "*notitle*"))')
     u.username = uname
     u.password = request.form['password']
     u.put()
