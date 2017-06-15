@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <title>Register</title>
 </head>
 <script type="text/javascript">
@@ -101,8 +102,11 @@
         <p id="failinfo" style="color: #AAAAAA">it is recommended to use<br/> the password same as the username</p>
         <form id="form1" action="/register" method="post">
             <input id="username" name="username" placeholder="Username" value="{{ username }}"> </br>
+            <br/>
             <input id="pwd1" name="password1" placeholder="Password" type="password"></br>
+            <br/>
             <input id="pwd" name="password" placeholder="Confirm Password" type="password"></br>
+            <br/>
             <button type="button" onclick="checkpwd()">Register</button> </br>
         </form>
         <input id="msg", hidden="true" value="{{ msg }}"></input>

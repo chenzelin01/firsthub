@@ -1,1 +1,5 @@
 echo "bin/*" > .gitignore
+
+Probably a little late now, but running "gcloud app deploy index.yaml" helped since running deploy by itself ignored the index.yaml file.
+building index before apploy the project
+gcloud app deploy index.yaml

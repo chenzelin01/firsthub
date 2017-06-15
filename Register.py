@@ -156,7 +156,7 @@ def signin():
     logging.info('query_success')
     for u in users:
         if password == u.password:
-            logging.info('before login ' + session['user'])
+            # logging.info('before login ' + session['user'])
             session['user'] = username
             logging.info('after login ' + session['user'])
             return render_template('signin-ok.html',
