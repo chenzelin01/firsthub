@@ -105,9 +105,8 @@ def register():
     logging.info(uname)
     try:
         logging.info('ancestor_key = ndb.Key("USER", uname or "*notitle*")')
-        ancestor_key = ndb.Key("USER", uname or "*notitle*")
         logging.info('users = user.query_user(ancestor_key).fetch(20)')
-        users = user.query_user(ancestor_key).fetch(1)
+        users = user.query_user(uname).fetch(1)
         logging.info('for u in users:')
         for u in users:
             logging.info(u.username)
