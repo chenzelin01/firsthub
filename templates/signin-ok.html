@@ -19,6 +19,18 @@
 	</style>
     <script type="text/javascript">
         var gesture_select = "a";
+        function setCheck(){
+            gesture_select = document.getElementById("check").value;
+            var radio = document.getElementsByName("gesture");
+            for(i=0; i<radio.length;i++){
+                radio_value = radio[i].value;
+                if(radio_value == gesture_select){
+                    radio[i].checked = true;
+                    var p = document.getElementById("gs");
+                    p.innerHTML = "录制 " + gesture_select + " 手势"
+                }
+            }
+        }
         function getValue(){
             var radio = document.getElementsByName("gesture");
             for(i=0; i<radio.length;i++){
@@ -59,12 +71,14 @@
         }
     </script>
 </head>
+<body  onload="setCheck()">
     <p align="center">Welcome {{ username }}</p>
     <div align="center">
+        <input hidden="true" id="check" value="{{ check_value }}"/>
         <form id="gesture_select">
             <p id="gs"> 录制 a 手势 </p>
             <label>
-                <input name="gesture" type="radio" value="a" onclick="getValue()" checked="true"/>a
+                <input name="gesture" type="radio" value="a" onclick="getValue()"/>a
                 <label style="color:#A0A0A0">已录{{ a_counts }}个</label>
             </label>
             <label>

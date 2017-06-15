@@ -166,7 +166,8 @@ def signin():
                                    c_counts=u.c_counts,
                                    d_counts=u.d_counts,
                                    e_counts=u.e_counts,
-                                   g_counts=u.g_counts)
+                                   g_counts=u.g_counts,
+                                   check_value='a')
     return render_template('loginform.html', message='wrong username or wrong password', username=username)
 
 @app.route('/submitgesture', methods=['POST'])
@@ -198,7 +199,8 @@ def submitgesture():
                                    c_counts=u.c_counts,
                                    d_counts=u.d_counts,
                                    e_counts=u.e_counts,
-                                   g_counts=u.g_counts)
+                                   g_counts=u.g_counts,
+                                   check_value=gesture_name)
 
 @app.route('/querydata', methods=['GET'])
 def query_data():
