@@ -4,5 +4,8 @@ api_version: 1
 threadsafe: true
 
 handlers:
+- url: /templates/js
+  static_dir: templates/js
 - url: /.*
   script: Register.app
+

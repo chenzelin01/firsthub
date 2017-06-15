@@ -1,10 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>Welcome {{ username }}</title>
+
+    <style>
+		#wipe {
+			margin: 10px auto;
+			width: 400px;
+			height: 400px;
+			background-size: 100% 100%;
+		}
+		canvas {
+			opacity: 0.9;
+            background-color: #020202
+		}
+	</style>
+    <script type="text/javascript">
+        var gesture_select = "a";
+        function getValue(){
+            var radio = document.getElementsByName("gesture");
+            for(i=0; i<radio.length;i++){
+                if(radio[i].checked){
+                    gesture_select = radio[i].value;
+                    var p = document.getElementById("gs");
+                    p.innerHTML = "录制 " + gesture_select + " 手势"
+                }
+            }
+        }
+
+        function submitgesture(){
+            var submitform = document.getElementById("submitform");
+            var gesture_kind = document.getElementById("gesture_kind");
+            gesture_kind.value = gesture_select;
+            var gesture_path = document.getElementById("gesture_path");
+            gesture_path.value = JSON.stringify(wipe.path);
+            submitform.submit();
+        }
+
+        function submitcancel(){
+            wipe = new Wipe({
+                el: '#wipe',
+                fg: '#ddd',
+                size: 15,
+                debug: true,
+                autoWipe: false,
+                data: null,
+                onswiping: function (percent) {
+
+                }
+            });
+        }
+
+        function disablewipe(percent){
+            // disable the wipe event so the gesture should be completed at once
+            this.wipeStart = function(){};
+            this.wipeMove = function(){};
+            this.wipeEnd = function(){};
+        }
+    </script>
 </head>
-<body>
-<p>Welcome {{ username }}</p>
+    <p align="center">Welcome {{ username }}</p>
+    <br />
+    <div align="center">
+        <form id="gesture_select">
+            <p id="gs"> 录制 a 手势 </p><br /><br />
+            <label>
+                <input name="gesture" type="radio" value="a" onclick="getValue()" checked="true"/>a
+                <label style="color:#A0A0A0">已录{{ a_counts }}个</label>
+            </label>
+            <label>
+                <input name="gesture" type="radio" value="b" onclick="getValue()"/>b
+                <label style="color:#A0A0A0">已录{{ b_counts }}个</label>
+            </label>
+            <label>
+                <input name="gesture" type="radio" value="c" onclick="getValue()"/>c
+                <label style="color:#A0A0A0">已录{{ c_counts }}个</label>
+            </label>
+            <br/>
+            <br/>
+            <label>
+                <input name="gesture" type="radio" value="d" onclick="getValue()"/>d
+                <label style="color:#A0A0A0">已录{{ d_counts }}个</label>
+            </label>
+            <label><input name="gesture" type="radio" value="e" onclick="getValue()"/>e
+                <label style="color:#A0A0A0">已录{{ e_counts }}个</label>
+            </label>
+            <label><input name="gesture" type="radio" value="g" onclick="getValue()"/>g
+                <label style="color:#A0A0A0">已录{{ g_counts }}个</label>
+            </label>
+        </form>
+    </div>
+    <div id="wipe"></div>
+    <div align="center">
+        <button onclick="submitgesture()">submit</button>
+        <button onclick="submitcancel()">cancel</button>
+    </div>
+    <form action="/submitgesture" hidden="true" method="post" id="submitform">
+        <input id="gesture_kind" name="gesture_kind">
+        <input name="submit_flag" value="true">
+        <input id="gesture_path" name="gesture_path">
+    </form>
+	<script src="/templates/js/wipe.js"></script>
+	<script>
+	var wipe = new Wipe({
+		el: '#wipe',
+		fg: '#ddd',
+		size: 15,
+		debug: true,
+		autoWipe: false,
+		data: null,
+		onswiping: disablewipe
+	});
+	</script>
 </body>
 </html>
