@@ -60,10 +60,9 @@
     </script>
 </head>
     <p align="center">Welcome {{ username }}</p>
-    <br />
     <div align="center">
         <form id="gesture_select">
-            <p id="gs"> 录制 a 手势 </p><br /><br />
+            <p id="gs"> 录制 a 手势 </p>
             <label>
                 <input name="gesture" type="radio" value="a" onclick="getValue()" checked="true"/>a
                 <label style="color:#A0A0A0">已录{{ a_counts }}个</label>
@@ -90,10 +89,10 @@
             </label>
         </form>
     </div>
-    <div id="wipe"></div>
     <div align="center">
-        <button onclick="submitgesture()">submit</button>
-        <button onclick="submitcancel()">cancel</button>
+        <div id="wipe"></div>
+        <button onclick="submitgesture()" style="margin:0px 20px">submit</button>
+        <button onclick="submitcancel()" style="margin:0px 20px">cancel</button>
     </div>
     <form action="/submitgesture" hidden="true" method="post" id="submitform">
         <input id="gesture_kind" name="gesture_kind">
