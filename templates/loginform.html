@@ -13,16 +13,17 @@
     }
 </script>
 <body>
-{% if message %}
-<p style="color:red">{{message}}</p>
-{% endif %}
-<form id="form1" action="/signin" method="post">
-    <legend>Please sign in:</legend>
-    <p><input name="username" placeholder="Username" value="{{ username }}"> </p>
-    <p><input name="password" placeholder="Password" type="password"></p>
-</form>
-    <button onclick="login()">Sign In</button> <button onclick="register()">Register</button>
-
+<div align="center">
+    {% if message %}
+    <p style="color:red">{{message}}</p>
+    {% endif %}
+    <form id="form1" action="/signin" method="post">
+        <legend>Please sign in:</legend>
+        <p><input name="username" placeholder="Username" value="{{ username }}"> </p>
+        <p><input name="password" placeholder="Password" type="password"></p>
+    </form>
+        <button onclick="login()">Sign In</button> <button onclick="register()">Register</button>
+</div>
 
 </body>
 </html>
