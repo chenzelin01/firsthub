@@ -7,7 +7,7 @@ import json
 import cookielib
 from google.appengine.ext import ndb
 import logging
-Debug = False
+Debug = True
 INFO = 'info'
 
 class info(ndb.Model):
@@ -80,7 +80,7 @@ class GXQDaily(webapp2.RedirectHandler):
 
     def get(self):
         self.sid = self.get_gxq_sid()
-        file = self.gxq_gold() + self.gxq_ice()
+        file = self.gxq_gold() + "\n " + self.gxq_ice()
         self.response.write(file)
 
 
@@ -100,7 +100,8 @@ class GXQDaily(webapp2.RedirectHandler):
         req = urllib2.Request(domain + url, para)
         reponse = urllib2.urlopen(req)
         file = reponse.read()
-        return file
+        json_ = json.loads(file, encoding='utf-8')
+        return json_['msg'].encode('utf-8')
 
     def gxq_ice(self):
         if self.sid is None:
@@ -118,7 +119,9 @@ class GXQDaily(webapp2.RedirectHandler):
         req = urllib2.Request(url=domain + url, data=para)
         reponse = urllib2.urlopen(req)
         file = reponse.read()
-        return file
+        json_ = json.loads(file, encoding='utf-8')
+        json_['msg'] = json_['msg'].encode('utf-8')
+        return json_['msg']
 
     # def yooli(self):
     #     # yooli.com cron
@@ -149,8 +152,9 @@ class GXQDaily(webapp2.RedirectHandler):
     #     return file
 
     def get_gxq_sid(self):
-        uid, sid = info.get_uid_sid()
-        return sid
+        # uid, sid = info.get_uid_sid()
+        # return sid
+        return "7d92e135fc60b2d2ded78aed06ad1cfa"
 
     def ssccat_login(self):
         cj = cookielib.CookieJar()
@@ -183,7 +187,7 @@ app = webapp2.WSGIApplication([('/daily', GXQDaily), ('/upload', Upload)], debug
 if Debug:
     from paste import httpserver
     def main():
-        httpserver.serve(app, host='127.0.0.1', port='8080')
+        httpserver.serve(app, host='127.0.0.1', port='8081')
 
     if __name__ == '__main__':
         main()
