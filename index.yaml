@@ -16,6 +16,12 @@ indexes:
   - name: date
     direction: desc
 
+- kind: info
+  ancestor: yes
+  properties:
+  - name: date
+    direction: desc
+
 - kind: user
   ancestor: yes
   properties:

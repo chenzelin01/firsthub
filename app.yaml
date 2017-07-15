@@ -6,6 +6,11 @@ threadsafe: true
 handlers:
 - url: /templates/js
   static_dir: templates/js
+- url: /daily
+  script: main.app
+- url: /upload
+  script: main.app
 - url: /.*
   script: Register.app
+
 

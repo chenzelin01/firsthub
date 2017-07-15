@@ -5,75 +5,84 @@ import urllib
 import time
 import json
 import cookielib
-html = """
-<!DOCTYPE>
-<html>
-<head>
-<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="MobileOptimized" content="320"/>
-<title>触屏特效,手机网页</title>
-<style type="text/css">
-    html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
-    body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {margin:0;padding:0;}
-    .dragme{background:#000;width:60px;height:60px; color:#fff; position:absolute; left:40px; top:40px; text-align:center; line-height:60px;}
-</style>
-<script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
-</head>
-<body>
-<div id="moveid" class="dragme">
-    lvtao.net
-</div>
-<script type="text/javascript">
-var isdrag=false;
-var tx,x,ty,y;
-$(function(){
-    document.getElementById("moveid").addEventListener('touchstart',touchStart);
-    document.getElementById("moveid").addEventListener('touchmove',touchMove);
-	document.getElementById("moveid").addEventListener('touchend',function(){
-        isdrag = false;
-    });
-});
-function touchStart(e){
-   isdrag = true;
-   e.preventDefault();
-   tx = parseInt($("#moveid").css('left'));
-   ty = parseInt($("#moveid").css('top'));
-   x = e.touches[0].pageX;
-   y = e.touches[0].pageY;
-}
-function touchMove(e){
-  if (isdrag){
-   e.preventDefault();
-	   var n = tx + e.touches[0].pageX - x;
-	   var h = ty + e.touches[0].pageY - y;
-	   $("#moveid").css("left",n);
-	   $("#moveid").css("top",h);
-   }
-}
-</script>
-</body>
-</html>
-"""
-Debug = True
-class HelloWebapp2(webapp2.RequestHandler):
+from google.appengine.ext import ndb
+import logging
+Debug = False
+INFO = 'info'
+
+class info(ndb.Model):
+    """Sub model for representing an info."""
+    uid = ndb.StringProperty()
+    sid = ndb.StringProperty()
+    date = ndb.DateTimeProperty(auto_now_add=True)
+
+    @staticmethod
+    def update_uid(uid):
+        try:
+            info_ = info.query_info().fetch(1)[0]
+            logging.info('info.query_info().fetch(1) ')
+            info_.uid = uid
+            logging.info('info_.uid = uid')
+            info_.put()
+        except Exception as e:
+            logging.error(e)
+            info_ = info(parent=ndb.Key("INFO", INFO or "*notitle*"))
+            info_.uid = uid
+            info_.sid = 'none'
+            info_.put()
+
+    @staticmethod
+    def update_sid(sid):
+        try:
+            info_ = info.query_info().fetch(1)[0]
+            info_.sid = sid
+            info_.put()
+        except:
+            info_ = info(parent=ndb.Key("INFO", INFO or "*notitle*"))
+            info_.sid = sid
+            info_.uid = 'none'
+            info_.put()
+            logging.info('sid create success')
+
+    @classmethod
+    def query_info(cls):
+        ancestor_key = ndb.Key('INFO', INFO or "*notitle*")
+        return cls.query(ancestor=ancestor_key).order(-cls.date)
+
+    @staticmethod
+    def get_uid_sid():
+        info_ = info.query_info().fetch(1)[0]
+        return info_.uid, info_.sid
+
+class Upload(webapp2.RedirectHandler):
     def get(self):
         get = self.request.GET
+        success_info = ''
         try:
-            if len(get) is 0:
-                self.response.write(html)
-            else:
-                self.response.write('You sent ' + get['s'] + ' which was ' + str(len(get['s'])) + ' length.')
+            uid = get['uid']
+            logging.info('update uid ' + uid)
+            info.update_uid(uid)
+            success_info += 'update uid success'
+            logging.info('update uid success')
         except:
-            self.response.write("")
+            pass
+        try:
+            sid = get['sid']
+            info.update_sid(sid)
+            success_info += 'update sid success'
+            logging.info('update sid success')
+        except:
+            pass
+        self.response.write(success_info)
+
 
 class GXQDaily(webapp2.RedirectHandler):
 
     def get(self):
         self.sid = self.get_gxq_sid()
         file = self.gxq_gold() + self.gxq_ice()
-        # file = self.yooli()
         self.response.write(file)
+
 
     def gxq_gold(self):
         if self.sid is None:
@@ -84,7 +93,7 @@ class GXQDaily(webapp2.RedirectHandler):
         para = {
             'uid': '2222799943',
             'sid': self.sid,
-            'version': '1.1.0',
+            'version': '1.1.5',
             'type': '1'
         }
         para = urllib.urlencode(para)
@@ -102,7 +111,7 @@ class GXQDaily(webapp2.RedirectHandler):
         para = {
             'uid': '2222799943',
             'sid': self.sid,
-            'version': '5.0.0',
+            'version': '5.4.0',
             'type': '1'
         }
         para = urllib.urlencode(para)
@@ -110,56 +119,38 @@ class GXQDaily(webapp2.RedirectHandler):
         reponse = urllib2.urlopen(req)
         file = reponse.read()
         return file
-    def yooli(self):
-        # yooli.com cron
-        domain = "http://app.yooli.com/"
-        url = "app3.0/core/add/user/sign+points"
-        para = {
-            'sign': 'true',
-            'ui': '2311358',
-            'tm': str(int(time.time())),
-            'nc': '3540a6',
-            'di': '05c07a213fd11bd2d20064fb97ed8940',
-            'mt': '3',
-            'v': '200705',
-            'ost': '20',
-            'channelId': '%E5%BA%94%E7%94%A8%E5%AE%9D%C2%B7%E8%85%BE%E8%AE%AF%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0',
-            'sid': '417',
-            'dn': 'HUAWEI+HUAWEI+GRA-TL00',
-            'sh': '1794',
-            'sw': '1080',
-            'ss': '3.0',
-            'osv': '5.0.1+android-29of40',
-            'si': '40023142896f816b3714cc3441b621e7e530a45b'
-        }
-        para = urllib.urlencode(para)
-        req = urllib2.Request(url=domain + url, data=para)
-        reponse = urllib2.urlopen(req)
-        file = reponse.read()
-        return file
+
+    # def yooli(self):
+    #     # yooli.com cron
+    #     domain = "http://app.yooli.com/"
+    #     url = "app3.0/core/add/user/sign+points"
+    #     para = {
+    #         'sign': 'true',
+    #         'ui': '2311358',
+    #         'tm': str(int(time.time())),
+    #         'nc': '3540a6',
+    #         'di': '05c07a213fd11bd2d20064fb97ed8940',
+    #         'mt': '3',
+    #         'v': '200705',
+    #         'ost': '20',
+    #         'channelId': '%E5%BA%94%E7%94%A8%E5%AE%9D%C2%B7%E8%85%BE%E8%AE%AF%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0',
+    #         'sid': '417',
+    #         'dn': 'HUAWEI+HUAWEI+GRA-TL00',
+    #         'sh': '1794',
+    #         'sw': '1080',
+    #         'ss': '3.0',
+    #         'osv': '5.0.1+android-29of40',
+    #         'si': '40023142896f816b3714cc3441b621e7e530a45b'
+    #     }
+    #     para = urllib.urlencode(para)
+    #     req = urllib2.Request(url=domain + url, data=para)
+    #     reponse = urllib2.urlopen(req)
+    #     file = reponse.read()
+    #     return file
 
     def get_gxq_sid(self):
-        domain = "https://passport.jinfuzi.com"
-        url = "/service/login"
-        para = {
-            "account": "18819461475",
-            "c_business": '2',
-            "c_channel": 'fj0update',
-            "c_identity": '53148d584290a7d5364e189882c648d2',
-            "c_mmodel": 'HUAWEI GRA-TL00',
-            "c_network": 'wifi',
-            "c_platform": '2',
-            "c_sysVer": '5.0.1',
-            "c_version": '1.1.0',
-            "password": '1995023czl!!',
-            "sign": '49e04a8f86e1e97791dd26620de3ef89',
-            "type": '1'
-        }
-        para = urllib.urlencode(para)
-        req = urllib2.Request(url=domain + url, data=para)
-        reponse = urllib2.urlopen(req)
-        file = json.load(reponse)
-        return file['res']['data']['sid']
+        uid, sid = info.get_uid_sid()
+        return sid
 
     def ssccat_login(self):
         cj = cookielib.CookieJar()
@@ -187,7 +178,7 @@ class GXQDaily(webapp2.RedirectHandler):
         print response.read()
 
 
-app = webapp2.WSGIApplication([('/', HelloWebapp2), ('/daily', GXQDaily)], debug=True)
+app = webapp2.WSGIApplication([('/daily', GXQDaily), ('/upload', Upload)], debug=True)
 
 if Debug:
     from paste import httpserver
