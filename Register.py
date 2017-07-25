@@ -219,7 +219,6 @@ def query_data():
         else:
             return 'you are not the admin so can not query the gesture data'
     except:
-        pass
         return '404 somthing wrong happened'
 
 @app.route('/cleanrecord', methods=['GET'])
