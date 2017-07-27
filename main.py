@@ -79,7 +79,7 @@ class Upload(webapp2.RedirectHandler):
 class GXQDaily(webapp2.RedirectHandler):
 
     def get(self):
-        domain = "http://jolintutor.herokuapp.com"
+        domain = "https://jolintutor.herokuapp.com"
         req = urllib2.Request(domain)
         reponse = urllib2.urlopen(req)
         self.response.write(reponse.read())
