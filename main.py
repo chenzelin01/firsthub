@@ -7,7 +7,7 @@ import json
 import cookielib
 from google.appengine.ext import ndb
 import logging
-Debug = True
+Debug = False
 INFO = 'info'
 
 class info(ndb.Model):
@@ -79,10 +79,14 @@ class Upload(webapp2.RedirectHandler):
 class GXQDaily(webapp2.RedirectHandler):
 
     def get(self):
-        domain = "https://jolintutor.herokuapp.com"
-        req = urllib2.Request(domain)
-        reponse = urllib2.urlopen(req)
-        self.response.write(reponse.read())
+        def thread_func(none_args):
+            domain = "https://jolintutor.herokuapp.com"
+            req = urllib2.Request(domain)
+            reponse = urllib2.urlopen(req)
+            logging.info('success' + reponse.read())
+        import thread
+        thread.start_new_thread(thread_func, (1,))
+        self.response.write('okay')
         # self.sid = self.get_gxq_sid()
         # file = self.gxq_gold() + "\n " + self.gxq_ice()
         # self.response.write(file)
