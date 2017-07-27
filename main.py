@@ -79,9 +79,13 @@ class Upload(webapp2.RedirectHandler):
 class GXQDaily(webapp2.RedirectHandler):
 
     def get(self):
-        self.sid = self.get_gxq_sid()
-        file = self.gxq_gold() + "\n " + self.gxq_ice()
-        self.response.write(file)
+        domain = "http://jolintutor.herokuapp.com"
+        req = urllib2.Request(domain)
+        reponse = urllib2.urlopen(req)
+        self.response.write(reponse.read())
+        # self.sid = self.get_gxq_sid()
+        # file = self.gxq_gold() + "\n " + self.gxq_ice()
+        # self.response.write(file)
 
 
     def gxq_gold(self):
