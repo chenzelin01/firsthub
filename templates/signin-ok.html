@@ -72,7 +72,7 @@
     </script>
 </head>
 <body  onload="setCheck()">
-    <p align="center">Welcome {{ username }}</p>
+    <p align="center">欢迎 {{ username }}</p>
     <div align="center">
         <input hidden="true" id="check" value="{{ check_value }}"/>
         <form id="gesture_select">
@@ -105,8 +105,8 @@
     </div>
     <div align="center">
         <div id="wipe"></div>
-        <button onclick="submitgesture()" style="margin:0px 20px">submit</button>
-        <button onclick="submitcancel()" style="margin:0px 20px">cancel</button>
+        <button onclick="submitgesture()" style="margin:0px 20px">提交</button>
+        <button onclick="submitcancel()" style="margin:0px 20px">取消</button>
     </div>
     <form action="/submitgesture" hidden="true" method="post" id="submitform">
         <input id="gesture_kind" name="gesture_kind">
