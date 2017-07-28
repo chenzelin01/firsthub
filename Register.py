@@ -174,11 +174,21 @@ def signin():
                                    check_value='a')
     return render_template('loginform.html', message='wrong username or wrong password', username=username)
 
-@app.route('/submitgesture', methods=['POST'])
-def submitgesture():
+@app.route('/submitgesture', methods=['GET'])
+def submitgesture_get():
     try:
         person_name = session['user']
-    except:
+        return render_template('loginform.html', message='please login first!', username=person_name)
+    except Exception as e:
+        logging.info(e)
+        return render_template('loginform.html', message='please login first!')
+
+@app.route('/submitgesture', methods=['POST'])
+def submitgesture_post():
+    try:
+        person_name = session['user']
+    except Exception as e:
+        logging.info(e)
         return 'please login first'
     logging.info('person_name: ' + person_name)
     gesture_name = request.form['gesture_kind']
