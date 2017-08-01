@@ -8,6 +8,8 @@ app.secret_key = Config.SECRET_STRING
 from google.appengine.ext import ndb
 import logging
 import json
+import urllib
+import requests
 
 class user(ndb.Model):
     """Sub model for representing an user."""
@@ -218,17 +220,26 @@ def submitgesture_post():
 
 @app.route('/querydata', methods=['GET'])
 def query_data():
+    def send_data(data):
+        send_url = 'http://jolintutor.herokuapp.com/data'
+        params = {'gesture_record': data}
+        requests.post(send_url, urllib.urlencode(params))
     try:
         person_name = session['user']
         if person_name == 'chenzelin':
             gestures = GestureRecord.query_record()
             gs = []
-            for g in gestures:
+            for index, g in enumerate(gestures):
                 gs.append(g.record)
-            return json.dumps(gs)
+                if index % 6000 == 0:
+                    send_data(json.dumps(gs))
+                    gs = []
+            send_data(json.dumps(gs))
+            return "update the record to you server successfully"
         else:
             return 'you are not the admin so can not query the gesture data'
-    except:
+    except Exception as e:
+        logging.error(e)
         return '404 somthing wrong happened'
 
 @app.route('/cleanrecord', methods=['GET'])

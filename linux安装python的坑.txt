@@ -16,3 +16,6 @@
 
 python27 把文件当成module需要添加空的__init__.py文件想要建立自己的python空间直接用virtualenv就可以了，
 可以不必折腾自己的python路径，如果版本问题的话，还是需要自己的python路径的
+
+gae 安装新库文件到lib中记得pip 用 python27/script的pip啊！
+pip install -t lib -r requirements.txt
