@@ -223,6 +223,7 @@ def query_data():
     try:
         args = request.args
         limit = args['limit']
+        limit = int(limit)
         if limit > 5000:
             limit = 5000
         person_name = session['user']
