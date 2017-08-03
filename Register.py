@@ -221,7 +221,7 @@ def submitgesture_post():
 @app.route('/querydata', methods=['GET'])
 def query_data():
     try:
-        limit = requests.args['limit']
+        limit = request.args['limit']
         if limit is None:
             return 'args limit missed'
         person_name = session['user']
