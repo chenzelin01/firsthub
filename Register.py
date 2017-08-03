@@ -221,22 +221,28 @@ def submitgesture_post():
 @app.route('/querydata', methods=['GET'])
 def query_data():
     try:
-        limit = request.args['limit']
-        if limit is None:
-            return 'args limit missed'
+        args = request.args
+        limit = args['limit']
+        if limit > 5000:
+            limit = 5000
         person_name = session['user']
         if person_name == 'chenzelin':
             gestures = GestureRecord.query_record(limit=limit)
             gs = []
             for g in gestures:
                 gs.append(g.record)
-                g.delete()
+                g.key.delete()
+            logging.info(len(gs))
             return json.dumps(gs)
         else:
             return 'you are not the admin so can not query the gesture data'
     except Exception as e:
         logging.error(e)
-        return '404 somthing wrong happened'
+        try:
+            return json.dumps(gs)
+        except Exception as e:
+            return e
+
 
 @app.route('/cleanrecord', methods=['GET'])
 def clean_record():
