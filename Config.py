@@ -99,7 +99,7 @@ default_view = 'users.profile'
 # Name of the site/product
 site_name = 'GAEStarterKit'
 
-#
+
 # Domain name for email links
 email_domain = 'http://localhost:8080'
 

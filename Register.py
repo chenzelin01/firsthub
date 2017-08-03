@@ -220,22 +220,18 @@ def submitgesture_post():
 
 @app.route('/querydata', methods=['GET'])
 def query_data():
-    def send_data(data):
-        send_url = 'http://jolintutor.herokuapp.com/data'
-        params = {'gesture_record': data}
-        requests.post(send_url, urllib.urlencode(params))
     try:
+        limit = requests.args['limit']
+        if limit is None:
+            return 'args limit missed'
         person_name = session['user']
         if person_name == 'chenzelin':
-            gestures = GestureRecord.query_record()
+            gestures = GestureRecord.query_record(limit=limit)
             gs = []
-            for index, g in enumerate(gestures):
+            for g in gestures:
                 gs.append(g.record)
-                if index % 6000 == 0:
-                    send_data(json.dumps(gs))
-                    gs = []
-            send_data(json.dumps(gs))
-            return "update the record to you server successfully"
+                g.delete()
+            return json.dumps(gs)
         else:
             return 'you are not the admin so can not query the gesture data'
     except Exception as e:
