@@ -224,19 +224,15 @@ def query_data():
         args = request.args
         limit = args['limit']
         limit = int(limit)
-        if limit > 5000:
-            limit = 5000
-        person_name = session['user']
-        if person_name == 'chenzelin':
-            gestures = GestureRecord.query_record(limit=limit)
-            gs = []
-            for g in gestures:
-                gs.append(g.record)
-                g.key.delete()
-            logging.info(len(gs))
-            return json.dumps(gs)
-        else:
-            return 'you are not the admin so can not query the gesture data'
+        if limit > 100:
+            limit = 100
+        gestures = GestureRecord.query_record(limit=limit)
+        gs = []
+        for g in gestures:
+            gs.append(g.record)
+            g.key.delete()
+        logging.info(len(gs))
+        return json.dumps(gs)
     except Exception as e:
         logging.error(e)
         try:
