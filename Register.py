@@ -148,7 +148,7 @@ def register():
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    return render_template('loginform.html')
+    return render_template('relay.html')
 
 @app.route('/signin', methods=['GET'])
 def signin_form():

@@ -1,6 +1,6 @@
 cron:
 - description: "daily job to subscribe cron gxq"
   url: /daily
-  schedule: every 1 hours
+  schedule: every 50 minutes
   target: beta
   timezone: Asia/Shanghai

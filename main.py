@@ -83,7 +83,13 @@ class GXQDaily(webapp2.RedirectHandler):
         req = urllib2.Request(domain)
         reponse = urllib2.urlopen(req)
         logging.info('success' + reponse.read())
+
+        # domain = "https://chenzelin.herokuapp.com"
+        # req = urllib2.Request(domain)
+        # reponse = urllib2.urlopen(req)
+        # logging.info('success' + reponse.read())
         self.response.write('okay')
+
         # self.sid = self.get_gxq_sid()
         # file = self.gxq_gold() + "\n " + self.gxq_ice()
         # self.response.write(file)
